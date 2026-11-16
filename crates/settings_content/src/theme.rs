@@ -826,6 +826,10 @@ pub struct ThemeColorsContent {
     #[serde(rename = "scrollbar.track.border")]
     pub scrollbar_track_border: Option<ThemeColor>,
 
+    /// The background color of the minimap. Defaults to the editor background at 70% opacity.
+    #[serde(rename = "minimap.background")]
+    pub minimap_background: Option<ThemeColor>,
+
     /// The color of the minimap thumb.
     #[serde(rename = "minimap.thumb.background")]
     pub minimap_thumb_background: Option<ThemeColor>,

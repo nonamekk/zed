@@ -154,6 +154,8 @@ pub struct ThemeColors {
     pub scrollbar_track_background: Hsla,
     /// The border color of the scrollbar track.
     pub scrollbar_track_border: Hsla,
+    /// The background color of the minimap.
+    pub minimap_background: Hsla,
     /// The color of the minimap thumb.
     pub minimap_thumb_background: Hsla,
     /// The color of the minimap thumb when hovered over.
@@ -403,6 +405,7 @@ pub enum ThemeColorField {
     ScrollbarThumbBorder,
     ScrollbarTrackBackground,
     ScrollbarTrackBorder,
+    MinimapBackground,
     MinimapThumbBackground,
     MinimapThumbHoverBackground,
     MinimapThumbActiveBackground,
@@ -530,6 +533,7 @@ impl ThemeColors {
             ThemeColorField::ScrollbarThumbBorder => self.scrollbar_thumb_border,
             ThemeColorField::ScrollbarTrackBackground => self.scrollbar_track_background,
             ThemeColorField::ScrollbarTrackBorder => self.scrollbar_track_border,
+            ThemeColorField::MinimapBackground => self.minimap_background,
             ThemeColorField::MinimapThumbBackground => self.minimap_thumb_background,
             ThemeColorField::MinimapThumbHoverBackground => self.minimap_thumb_hover_background,
             ThemeColorField::MinimapThumbActiveBackground => self.minimap_thumb_active_background,

@@ -243,6 +243,10 @@ pub fn theme_colors_refinement(
         .border
         .as_ref()
         .and_then(|color| try_parse_color(color).ok());
+    let editor_background = this
+        .editor_background
+        .as_ref()
+        .and_then(|color| try_parse_color(color).ok());
     let editor_document_highlight_read_background = this
         .editor_document_highlight_read_background
         .as_ref()
@@ -517,6 +521,11 @@ pub fn theme_colors_refinement(
             .scrollbar_track_border
             .as_ref()
             .and_then(|color| try_parse_color(color).ok()),
+        minimap_background: this
+            .minimap_background
+            .as_ref()
+            .and_then(|color| try_parse_color(color).ok())
+            .or(editor_background.map(|color| color.opacity(0.7))),
         minimap_thumb_background: this
             .minimap_thumb_background
             .as_ref()
@@ -545,10 +554,7 @@ pub fn theme_colors_refinement(
             .editor_code_lens_foreground
             .as_ref()
             .and_then(|color| try_parse_color(color).ok()),
-        editor_background: this
-            .editor_background
-            .as_ref()
-            .and_then(|color| try_parse_color(color).ok()),
+        editor_background,
         editor_gutter_background: this
             .editor_gutter_background
             .as_ref()
@@ -1106,5 +1112,53 @@ mod tests {
             override_refinement.vim_helix_jump_label_foreground,
             Some(override_color)
         );
+    }
+
+    #[test]
+    fn explicit_minimap_background_takes_precedence_over_editor_background() {
+        let colors: ThemeColorsContent = serde_json::from_value(serde_json::json!({
+            "editor.background": "#112233",
+            "minimap.background": "#44556677",
+        }))
+        .expect("valid theme colors");
+
+        let refinement = theme_colors_refinement(
+            &colors,
+            &status_colors_refinement(&StatusColorsContent::default()),
+            true,
+        );
+
+        assert_eq!(
+            refinement.minimap_background,
+            Some(parse_color("#44556677"))
+        );
+    }
+
+    #[test]
+    fn minimap_background_falls_back_to_translucent_editor_background() {
+        let mut colors = ThemeColorsContent::default();
+        colors.editor_background = Some("#112233".into());
+
+        let refinement = theme_colors_refinement(
+            &colors,
+            &status_colors_refinement(&StatusColorsContent::default()),
+            true,
+        );
+
+        assert_eq!(
+            refinement.minimap_background,
+            Some(parse_color("#112233").opacity(0.7))
+        );
+    }
+
+    #[test]
+    fn minimap_background_is_absent_when_editor_background_is_missing() {
+        let refinement = theme_colors_refinement(
+            &ThemeColorsContent::default(),
+            &status_colors_refinement(&StatusColorsContent::default()),
+            true,
+        );
+
+        assert_eq!(refinement.minimap_background, None);
     }
 }

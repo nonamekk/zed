@@ -11661,7 +11661,7 @@ impl Editor {
             EditorMode::SingleLine => cx.theme().system().transparent,
             EditorMode::AutoHeight { .. } => cx.theme().system().transparent,
             EditorMode::Full { .. } => cx.theme().colors().editor_background,
-            EditorMode::Minimap { .. } => cx.theme().colors().editor_background.opacity(0.7),
+            EditorMode::Minimap { .. } => cx.theme().colors().minimap_background,
         };
 
         EditorStyle {
