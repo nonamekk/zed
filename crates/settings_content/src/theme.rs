@@ -858,6 +858,10 @@ pub struct ThemeColorsContent {
     #[serde(rename = "editor.subheader.background")]
     pub editor_subheader_background: Option<ThemeColor>,
 
+    /// The background of a multibuffer file header while hovered. Defaults to `element.hover`.
+    #[serde(rename = "editor.subheader.hover_background")]
+    pub editor_subheader_hover_background: Option<ThemeColor>,
+
     #[serde(rename = "editor.active_line.background")]
     pub editor_active_line_background: Option<ThemeColor>,
 

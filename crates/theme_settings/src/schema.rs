@@ -557,6 +557,12 @@ pub fn theme_colors_refinement(
             .editor_subheader_background
             .as_ref()
             .and_then(|color| try_parse_color(color).ok()),
+        // Unset, it follows the theme's `element.hover`.
+        editor_subheader_hover_background: this
+            .editor_subheader_hover_background
+            .as_ref()
+            .and_then(|color| try_parse_color(color).ok())
+            .or(element_hover),
         editor_active_line_background: this
             .editor_active_line_background
             .as_ref()
@@ -1064,6 +1070,52 @@ mod tests {
         assert_eq!(refinement.editor_diff_hunk_deleted_background, None);
         assert_eq!(refinement.editor_diff_hunk_deleted_hollow_background, None);
         assert_eq!(refinement.editor_diff_hunk_deleted_hollow_border, None);
+    }
+
+    #[test]
+    fn explicit_subheader_hover_background_takes_precedence_over_element_hover() {
+        let mut colors = ThemeColorsContent::default();
+        colors.element_hover = Some("#11223344".into());
+        colors.editor_subheader_hover_background = Some("#556677".into());
+
+        let refinement = theme_colors_refinement(
+            &colors,
+            &status_colors_refinement(&StatusColorsContent::default()),
+            true,
+        );
+
+        assert_eq!(
+            refinement.editor_subheader_hover_background,
+            Some(parse_color("#556677"))
+        );
+    }
+
+    #[test]
+    fn subheader_hover_background_falls_back_to_element_hover() {
+        let mut colors = ThemeColorsContent::default();
+        colors.element_hover = Some("#11223344".into());
+
+        let refinement = theme_colors_refinement(
+            &colors,
+            &status_colors_refinement(&StatusColorsContent::default()),
+            true,
+        );
+
+        assert_eq!(
+            refinement.editor_subheader_hover_background,
+            Some(parse_color("#11223344"))
+        );
+    }
+
+    #[test]
+    fn subheader_hover_background_is_absent_when_element_hover_is_missing() {
+        let refinement = theme_colors_refinement(
+            &ThemeColorsContent::default(),
+            &status_colors_refinement(&StatusColorsContent::default()),
+            true,
+        );
+
+        assert_eq!(refinement.editor_subheader_hover_background, None);
     }
 
     fn parse_color(color: &str) -> gpui::Hsla {

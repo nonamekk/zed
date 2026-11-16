@@ -211,6 +211,8 @@ pub struct ThemeColors {
     pub editor_background: Hsla,
     pub editor_gutter_background: Hsla,
     pub editor_subheader_background: Hsla,
+    /// The background of a multibuffer file header while hovered. Defaults to `element_hover`.
+    pub editor_subheader_hover_background: Hsla,
     pub editor_active_line_background: Hsla,
     pub editor_highlighted_line_background: Hsla,
     /// Line color of the line a debugger is currently stopped at
@@ -412,6 +414,7 @@ pub enum ThemeColorField {
     EditorBackground,
     EditorGutterBackground,
     EditorSubheaderBackground,
+    EditorSubheaderHoverBackground,
     EditorActiveLineBackground,
     EditorHighlightedLineBackground,
     EditorLineNumber,
@@ -541,6 +544,9 @@ impl ThemeColors {
             ThemeColorField::EditorBackground => self.editor_background,
             ThemeColorField::EditorGutterBackground => self.editor_gutter_background,
             ThemeColorField::EditorSubheaderBackground => self.editor_subheader_background,
+            ThemeColorField::EditorSubheaderHoverBackground => {
+                self.editor_subheader_hover_background
+            }
             ThemeColorField::EditorActiveLineBackground => self.editor_active_line_background,
             ThemeColorField::EditorHighlightedLineBackground => {
                 self.editor_highlighted_line_background
