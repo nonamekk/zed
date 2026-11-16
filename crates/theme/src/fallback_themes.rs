@@ -161,6 +161,7 @@ pub(crate) fn zed_default_dark() -> Theme {
                 editor_background: editor,
                 editor_gutter_background: editor,
                 editor_subheader_background: bg,
+                editor_subheader_hover_background: hover,
                 editor_active_line_background: hsla(222.9 / 360., 13.5 / 100., 20.4 / 100., 1.0),
                 editor_highlighted_line_background: hsla(207.8 / 360., 81. / 100., 66. / 100., 0.1),
                 editor_debugger_active_line_background: hsla(
@@ -242,6 +243,7 @@ pub(crate) fn zed_default_dark() -> Theme {
                 scrollbar_thumb_border: hsla(228. / 360., 8. / 100., 25. / 100., 1.),
                 scrollbar_track_background: gpui::transparent_black(),
                 scrollbar_track_border: hsla(228. / 360., 8. / 100., 25. / 100., 1.),
+                minimap_background: editor.opacity(0.7),
                 minimap_thumb_background: hsla(225.0 / 360., 11.8 / 100., 26.7 / 100., 0.7),
                 minimap_thumb_hover_background: hsla(225.0 / 360., 11.8 / 100., 26.7 / 100., 0.7),
                 minimap_thumb_active_background: hsla(225.0 / 360., 11.8 / 100., 26.7 / 100., 0.7),

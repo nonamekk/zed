@@ -826,6 +826,10 @@ pub struct ThemeColorsContent {
     #[serde(rename = "scrollbar.track.border")]
     pub scrollbar_track_border: Option<ThemeColor>,
 
+    /// The background color of the minimap. Defaults to the editor background at 70% opacity.
+    #[serde(rename = "minimap.background")]
+    pub minimap_background: Option<ThemeColor>,
+
     /// The color of the minimap thumb.
     #[serde(rename = "minimap.thumb.background")]
     pub minimap_thumb_background: Option<ThemeColor>,
@@ -857,6 +861,10 @@ pub struct ThemeColorsContent {
 
     #[serde(rename = "editor.subheader.background")]
     pub editor_subheader_background: Option<ThemeColor>,
+
+    /// The background of a multibuffer file header while hovered. Defaults to `element.hover`.
+    #[serde(rename = "editor.subheader.hover_background")]
+    pub editor_subheader_hover_background: Option<ThemeColor>,
 
     #[serde(rename = "editor.active_line.background")]
     pub editor_active_line_background: Option<ThemeColor>,

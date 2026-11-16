@@ -11464,8 +11464,10 @@ mod tests {
     use lsp::DiagnosticSeverity;
     use multi_buffer::PathKey;
     use rand::{RngCore, rngs::StdRng};
+    use settings::SettingsStore;
     use std::num::NonZeroU32;
     use text::PointUtf16;
+    use theme_settings::{ThemeColorsContent, ThemeStyleContent};
     use util::test::sample_text;
 
     // Regression test for https://github.com/zed-industries/zed/issues/65453.
@@ -11513,6 +11515,49 @@ mod tests {
             assert!(!has_highlight_underline(editor, &minimap_style, cx));
         })
         .expect("checked full editor and minimap");
+    }
+
+    #[gpui::test]
+    fn test_minimap_background_comes_from_theme(cx: &mut TestAppContext) {
+        init_test(cx, |_| {});
+
+        cx.update(|cx| {
+            SettingsStore::update_global(cx, |store, cx| {
+                store.update_user_settings(cx, |settings| {
+                    settings.theme.experimental_theme_overrides = Some(ThemeStyleContent {
+                        colors: ThemeColorsContent {
+                            minimap_background: Some("#112233".into()),
+                            ..ThemeColorsContent::default()
+                        },
+                        ..ThemeStyleContent::default()
+                    });
+                });
+            });
+        });
+        cx.run_until_parked();
+
+        let editor = cx.add_window(|window, cx| {
+            let buffer = MultiBuffer::build_simple("", cx);
+            Editor::new(EditorMode::full(), buffer, None, window, cx)
+        });
+        editor
+            .update(cx, |editor, window, cx| {
+                let minimap = editor.initialize_new_minimap(
+                    EditorSettings::get_global(cx).minimap,
+                    window,
+                    cx,
+                );
+
+                assert_eq!(
+                    minimap.read(cx).create_style(cx).background,
+                    theme::try_parse_color("#112233").expect("valid color")
+                );
+                assert_eq!(
+                    editor.create_style(cx).background,
+                    cx.theme().colors().editor_background
+                );
+            })
+            .expect("checked full editor and minimap");
     }
 
     struct MinimapGeometry {

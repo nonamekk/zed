@@ -154,6 +154,8 @@ pub struct ThemeColors {
     pub scrollbar_track_background: Hsla,
     /// The border color of the scrollbar track.
     pub scrollbar_track_border: Hsla,
+    /// The background color of the minimap.
+    pub minimap_background: Hsla,
     /// The color of the minimap thumb.
     pub minimap_thumb_background: Hsla,
     /// The color of the minimap thumb when hovered over.
@@ -211,6 +213,8 @@ pub struct ThemeColors {
     pub editor_background: Hsla,
     pub editor_gutter_background: Hsla,
     pub editor_subheader_background: Hsla,
+    /// The background of a multibuffer file header while hovered. Defaults to `element_hover`.
+    pub editor_subheader_hover_background: Hsla,
     pub editor_active_line_background: Hsla,
     pub editor_highlighted_line_background: Hsla,
     /// Line color of the line a debugger is currently stopped at
@@ -403,6 +407,7 @@ pub enum ThemeColorField {
     ScrollbarThumbBorder,
     ScrollbarTrackBackground,
     ScrollbarTrackBorder,
+    MinimapBackground,
     MinimapThumbBackground,
     MinimapThumbHoverBackground,
     MinimapThumbActiveBackground,
@@ -412,6 +417,7 @@ pub enum ThemeColorField {
     EditorBackground,
     EditorGutterBackground,
     EditorSubheaderBackground,
+    EditorSubheaderHoverBackground,
     EditorActiveLineBackground,
     EditorHighlightedLineBackground,
     EditorLineNumber,
@@ -530,6 +536,7 @@ impl ThemeColors {
             ThemeColorField::ScrollbarThumbBorder => self.scrollbar_thumb_border,
             ThemeColorField::ScrollbarTrackBackground => self.scrollbar_track_background,
             ThemeColorField::ScrollbarTrackBorder => self.scrollbar_track_border,
+            ThemeColorField::MinimapBackground => self.minimap_background,
             ThemeColorField::MinimapThumbBackground => self.minimap_thumb_background,
             ThemeColorField::MinimapThumbHoverBackground => self.minimap_thumb_hover_background,
             ThemeColorField::MinimapThumbActiveBackground => self.minimap_thumb_active_background,
@@ -541,6 +548,9 @@ impl ThemeColors {
             ThemeColorField::EditorBackground => self.editor_background,
             ThemeColorField::EditorGutterBackground => self.editor_gutter_background,
             ThemeColorField::EditorSubheaderBackground => self.editor_subheader_background,
+            ThemeColorField::EditorSubheaderHoverBackground => {
+                self.editor_subheader_hover_background
+            }
             ThemeColorField::EditorActiveLineBackground => self.editor_active_line_background,
             ThemeColorField::EditorHighlightedLineBackground => {
                 self.editor_highlighted_line_background
