@@ -36,6 +36,9 @@ sub(r"^(\s*)cargo build --release --frozen --package zed --package cli$",
 sub(r"^(\s*)export CARGO_PROFILE_RELEASE_DEBUG=2$", r"\1export CARGO_PROFILE_RELEASE_DEBUG=0")
 # With --target, cargo puts the editor under the triple.
 sub(r"target/release/zed ", f"$CARGO_TARGET_DIR/{triple}/release/zed ")
+# The launcher finds the editor before it does anything else, --completions included, and looks for it
+# only next to itself, so it gets the editor's path. It only checks that the file is there; it never runs it.
+sub(r" --completions ", f' --zed "$CARGO_TARGET_DIR/{triple}/release/zed" --completions ', 5)
 sub(r"target/release/", "$CARGO_TARGET_DIR/release/", 8)
 text += "\noptions=(!debug !lto)\n"
 open(out, "w").write(text)
