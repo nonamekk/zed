@@ -16,7 +16,8 @@ Stock themes set neither key, so they look the same as in upstream Zed. The same
 1. Lurks for latest stable Zed release every hour, and starts a build if it does find the one that isn't build yet.
 2. The `build` job cherry-picks this branch's own commits onto that release (via `transparent-custom/rebase.sh`). A commit that doesn't apply fails the run.
 3. It turns Arch's PKGBUILD into one for this source (`transparent-custom/pkgbuild.py`: Arch's `release` profile with thin LTO and one codegen unit, no debug info, the editor built for Zen 5, `pkgrel=1.5`) and builds the package in an `archlinux:base-devel` container (`transparent-custom/container-build.sh`).
-4. The `release` job publishes the package as release `zed-<version>-transparent.<id>`, with the applied commits in its notes, and replaces the package and database in the `pacman-repo` release, which is the pacman repository.
+4. Next to it, the `test` job runs the patch's own tests (`transparent-custom/container-test.sh`) on the same source, in the same kind of container, as a plain debug build. Zed's own tests run upstream before every release; these check that the patch still works on it. Each of the patch's tests has to show up as passed, so a renamed or removed test fails the job instead of silently not running.
+5. Once both pass, the `release` job publishes the package as release `zed-<version>-transparent.<id>`, with the applied commits in its notes, and replaces the package and database in the `pacman-repo` release, which is the pacman repository.
 
 The branch on GitHub isn't moved by the build: the workflow token can't push history that changes workflow files, and every Zed release changes Zed's own.
 

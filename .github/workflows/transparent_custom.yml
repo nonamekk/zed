@@ -117,8 +117,39 @@ jobs:
           path: out/
           retention-days: 7
 
+  # The patch's own tests, on the same source as the build, next to it on a runner of its own. Zed's
+  # own tests run upstream before every release; nothing else here checks the patch still works on it.
+  test:
+    needs: plan
+    if: needs.plan.outputs.build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      TAG: ${{ needs.plan.outputs.tag }}
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache \
+            /usr/local/share/boost /usr/share/swift
+          sudo docker image prune --all --force >/dev/null
+          df -h /
+
+      - name: Apply this branch's commits to the release
+        run: |
+          curl -fsS -m 60 -o rebase.sh \
+            "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/transparent-custom/rebase.sh"
+          bash rebase.sh "$TAG" "$GITHUB_SHA" src
+
+      - name: Run the patch's tests
+        run: |
+          mkdir -p pkg
+          curl -fsS -m 60 -o pkg/PKGBUILD.arch \
+            https://gitlab.archlinux.org/archlinux/packaging/packages/zed/-/raw/main/PKGBUILD
+          docker run --rm -v "$PWD/src:/src" -v "$PWD/pkg:/pkg:ro" \
+            archlinux:base-devel bash /src/transparent-custom/container-test.sh
+
   release:
-    needs: [plan, build]
+    needs: [plan, build, test]
     runs-on: ubuntu-latest
     permissions:
       contents: write
