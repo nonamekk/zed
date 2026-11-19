@@ -15,7 +15,7 @@ Stock themes set neither key, so they look the same as in upstream Zed. The same
 
 1. Lurks for latest stable Zed release every hour, and starts a build if it does find the one that isn't build yet.
 2. The `build` job cherry-picks this branch's own commits onto that release (via `transparent-custom/rebase.sh`). A commit that doesn't apply fails the run.
-3. It turns Arch's PKGBUILD into one for this source (`transparent-custom/pkgbuild.py`: the `release-fast` profile, no LTO, `pkgrel=1.3`) and builds the package in an `archlinux:base-devel` container (`transparent-custom/container-build.sh`).
+3. It turns Arch's PKGBUILD into one for this source (`transparent-custom/pkgbuild.py`: the `release-fast` profile, no LTO, the editor built for Zen 5, `pkgrel=1.4`) and builds the package in an `archlinux:base-devel` container (`transparent-custom/container-build.sh`).
 4. The `release` job publishes the package as release `zed-<version>-transparent.<id>`, with the applied commits in its notes, and replaces the package and database in the `pacman-repo` release, which is the pacman repository.
 
 The branch on GitHub isn't moved by the build: the workflow token can't push history that changes workflow files, and every Zed release changes Zed's own.
@@ -31,6 +31,12 @@ git push --force-with-lease fork zed-transparent-custom
 ```
 
 The push starts a build of the rebased branch.
+
+## Built for Zen 5
+
+The editor (`/usr/lib/zed/zed-editor`) is built with `-C target-cpu=znver5`, so the package runs on Zen 5 CPUs only; other CPUs stop it with "illegal instruction". The runner's CPU can't run it either, so `pkgbuild.py` keeps everything that runs during the build generic: the editor alone is built with `--target`, which keeps the flag away from build scripts and proc macros, and the `zeditor` launcher, which the PKGBUILD runs to write the shell completions, stays generic x86-64. C code built by build scripts stays generic as well. For other CPUs change `cpu` in `pkgbuild.py`, or use `x86-64-v3` (any CPU with AVX2).
+
+`pkgrel` goes up whenever the build changes for the same Zed version (1.3 → 1.4 for the CPU flag); with the same version and `pkgrel`, pacman keeps the installed package.
 
 ## Install
 
