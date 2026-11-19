@@ -28,11 +28,14 @@ sub(r"^sha256sums=\(.*\)$", "sha256sums=(SKIP)")
 # C code compiled by build scripts (tree-sitter grammars) stays generic: with the host and the target
 # being the same triple, the cc crate can't tell its host compiles from its target ones.
 sub(r"^(\s*)cargo build --release --frozen --package zed --package cli$",
-    r"\1cargo build --profile release-fast --frozen --package cli"
+    r"\1cargo build --release --frozen --package cli"
     "\n"
-    rf'\1RUSTFLAGS="$RUSTFLAGS -C target-cpu={cpu}" cargo build --profile release-fast --frozen --target {triple} --package zed')
+    rf'\1RUSTFLAGS="$RUSTFLAGS -C target-cpu={cpu}" cargo build --release --frozen --target {triple} --package zed')
+# Arch's release profile as it is (thin LTO, one codegen unit, opt-level 3), without its full debug
+# info: that only feeds the debug package, which this build doesn't make (options below).
+sub(r"^(\s*)export CARGO_PROFILE_RELEASE_DEBUG=2$", r"\1export CARGO_PROFILE_RELEASE_DEBUG=0")
 # With --target, cargo puts the editor under the triple.
-sub(r"target/release/zed ", f"$CARGO_TARGET_DIR/{triple}/release-fast/zed ")
-sub(r"target/release/", "$CARGO_TARGET_DIR/release-fast/", 8)
+sub(r"target/release/zed ", f"$CARGO_TARGET_DIR/{triple}/release/zed ")
+sub(r"target/release/", "$CARGO_TARGET_DIR/release/", 8)
 text += "\noptions=(!debug !lto)\n"
 open(out, "w").write(text)

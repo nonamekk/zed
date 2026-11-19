@@ -11,5 +11,5 @@ chown -R builder /pkg /out /target
 runuser -u builder -- env \
   BUILDDIR=/tmp/build PKGDEST=/out SRCDEST=/pkg PACKAGER="zed-transparent-custom (GitHub Actions)" \
   CARGO_TARGET_DIR=/target CARGO_BUILD_JOBS="$(nproc)" CARGO_INCREMENTAL=0 \
-  CARGO_PROFILE_RELEASE_FAST_DEBUG=0 CARGO_PROFILE_RELEASE_FAST_BUILD_OVERRIDE_DEBUG=0 \
+  CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG=0 \
   bash -c 'cd /pkg && makepkg -f --nodeps --nocheck --skipchecksums'
