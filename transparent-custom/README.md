@@ -49,5 +49,5 @@ A single release can also be installed directly: `sudo pacman -U <package URL>`.
 ## Setup on GitHub
 
 - `zed-transparent-custom` is the repository's default branch (scheduled workflows only start from it).
-- Actions are enabled for the repository (a fork starts with them off). Zed's own scheduled workflows then start too and skip at once: each checks that it runs in `zed-industries/zed`. `gh workflow disable` turns them off.
+- Actions are enabled for the repository (a fork starts with them off). Zed's own workflows are removed from this branch, so only this build runs; `rebase.sh` leaves commits that only change `.github/workflows` out of the build, since Zed's releases keep changing those files.
 - GitHub turns scheduled workflows off after 60 days without activity in a public repository; a manual run turns them back on.

@@ -91,7 +91,7 @@ jobs:
         run: |
           curl -fsS -m 60 -o rebase.sh \
             "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/transparent-custom/rebase.sh"
-          bash rebase.sh "$TAG" "https://github.com/$GITHUB_REPOSITORY" "$GITHUB_SHA" src | tee commits.md
+          bash rebase.sh "$TAG" "$GITHUB_SHA" src | tee commits.md
 
       - name: Write the PKGBUILD
         run: |
